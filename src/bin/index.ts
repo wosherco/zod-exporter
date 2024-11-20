@@ -75,16 +75,13 @@ async function executeCommand(input: string) {
 
 async function processRouter() {
   const importedFile: any = await jiti.import(path.resolve(options.input));
-
   const schema = importedFile[options.schema];
-
   const extractedSchema = exportZodSchema(schema);
-
   const stringifiedSchema = JSON.stringify(extractedSchema, null, 2);
 
-  if (options.output === undefined) {
+  if (options.output === undefined && !options.exec) {
     process.stdout.write(stringifiedSchema + "\n");
-  } else {
+  } else if (options.output) {
     await fs.writeFile(options.output, stringifiedSchema);
     process.stderr.write(`Extracted routes saved to ${options.output}\n`);
   }
